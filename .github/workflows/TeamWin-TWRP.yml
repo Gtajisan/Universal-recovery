@@ -154,7 +154,7 @@ jobs:
       
     - name: Upload to Release
       if: success()
-      uses: softprops/action-gh-release@master
+      uses: softprops/action-gh-release@v2
       with:
         files: |
           android-recovery/out/target/product/${{ inputs.DEVICE_NAME }}/${{ inputs.BUILD_TARGET }}.img

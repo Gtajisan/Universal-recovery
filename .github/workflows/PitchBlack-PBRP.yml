@@ -183,18 +183,25 @@ jobs:
             echo "::warning::The zip file isn't present but make sure the image is from only after 100% completion in build stage"
         fi
 
+    - name: Set Release Files
+      if: always() && (env.CHECK_IMG_IS_OK == 'true' || env.CHECK_ZIP_IS_OK == 'true')
+      run: |
+        if [ "${{ inputs.BUILD_TARGET }}" != "pbrp" ]; then
+          echo "RELEASE_FILES<<EOF" >> $GITHUB_ENV
+          echo "${{ env.OUTPUT_DIR }}/${{ inputs.BUILD_TARGET }}*.img" >> $GITHUB_ENV
+        else
+          echo "RELEASE_FILES<<EOF" >> $GITHUB_ENV
+          echo "${{ env.OUTPUT_DIR }}/recovery*.img" >> $GITHUB_ENV
+        fi
+        echo "${{ env.OUTPUT_DIR }}/PBRP*.zip" >> $GITHUB_ENV
+        echo "${{ env.OUTPUT_DIR }}/ramdisk-recovery.*" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+
     - name: Upload to Release
       if: always() && (env.CHECK_IMG_IS_OK == 'true' || env.CHECK_ZIP_IS_OK == 'true')
-      uses: softprops/action-gh-release@master
+      uses: softprops/action-gh-release@v2
       with:
-        files: |
-          if [ "${{ inputs.BUILD_TARGET }}" != "pbrp" ]; then
-            ${{ env.OUTPUT_DIR }}/${{ inputs.BUILD_TARGET }}*.img
-          else
-            ${{ env.OUTPUT_DIR }}/recovery*.img
-          fi
-          ${{ env.OUTPUT_DIR }}/PBRP*.zip
-          ${{ env.OUTPUT_DIR }}/ramdisk-recovery.*
+        files: ${{ env.RELEASE_FILES }}
         name: Unofficial PBRP for ${{ inputs.DEVICE_NAME }} // ${{ env.BUILD_DATE }}
         tag_name: ${{ github.run_id }}
         body: |
