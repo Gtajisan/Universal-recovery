@@ -55,7 +55,7 @@ on:
 jobs:
   build:
     name: Build SHRP by ${{ github.actor }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
     env:
       OUTPUT_DIR: ${{ github.workspace }}/android-recovery/out/target/product

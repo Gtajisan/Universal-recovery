@@ -1,4 +1,4 @@
-name: Recovery Build TWRP 4.4+ (Ubuntu 18.04)
+name: Recovery Build TWRP 4.4+ (Ubuntu 20.04)
 permissions:
   contents: write
 on:
@@ -51,9 +51,9 @@ on:
 jobs:
   build:
     if: github.event.repository.owner.id == github.event.sender.id
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     container:
-      image: ghcr.io/catthehacker/ubuntu:runner-18.04
+      image: ghcr.io/catthehacker/ubuntu:runner-20.04
     env:
       LC_ALL: "C.UTF-8"
       ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
