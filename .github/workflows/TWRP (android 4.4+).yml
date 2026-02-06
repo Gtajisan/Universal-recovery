@@ -72,7 +72,7 @@ jobs:
         echo "::endgroup::"
  
     - name: Check Out
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     # Cleanup The Actions Workspace Using Custom Composite Run Actions
     - name: Cleanup
@@ -136,8 +136,18 @@ jobs:
 
     - name: Sync Device Dependencies
       run: |
-        bash ${GITHUB_WORKSPACE}/scripts/convert.sh ${{ inputs.DEVICE_PATH }}/${{ steps.buildtree.outputs.value }}.dependencies
-        repo sync -j$(nproc --all)
+        deps_file="${{ inputs.DEVICE_PATH }}/${{ inputs.DEVICE_NAME }}.dependencies"
+        if [ -f "${deps_file}" ]; then
+          echo "Found ${deps_file}, attempting dependency sync."
+          if [ -x "${GITHUB_WORKSPACE}/scripts/convert.sh" ]; then
+            bash "${GITHUB_WORKSPACE}/scripts/convert.sh" "${deps_file}"
+            repo sync -j"$(nproc --all)"
+          else
+            echo "Missing scripts/convert.sh; skipping dependency conversion."
+          fi
+        else
+          echo "No dependencies file found at ${deps_file}. Skipping dependency sync."
+        fi
       working-directory: ${{ steps.pwd.outputs.android-recovery-folder }}
       continue-on-error: true
 
