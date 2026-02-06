@@ -60,7 +60,7 @@ jobs:
       contents: write
     steps:
     - name: Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
               
     - name: Clean-up
       uses: rokibhasansagar/slimhub_actions@main
@@ -136,7 +136,7 @@ jobs:
 
     - name: Upload to Release
       if: env.CHECK_IMG_IS_OK == 'true'
-      uses: softprops/action-gh-release@master
+      uses: softprops/action-gh-release@v2
       with:
         files: |
           ${{ env.OUTPUT_DIR }}/OrangeFox*.img

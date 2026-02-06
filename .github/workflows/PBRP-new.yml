@@ -39,6 +39,11 @@ on:
         description: 'Path for dependency check (optional)'
         required: false
         default: 'recovery/root/system/bin/qseecomd'
+      UPLOAD_ARTIFACTS:
+        description: 'Upload build artifacts'
+        required: false
+        default: 'true'
+        type: boolean
 
 jobs:
   build:
@@ -57,7 +62,7 @@ jobs:
         echo "BUILD_DATE=$(TZ=UTC date +%Y%m%d)" >> $GITHUB_ENV
         
     - name: Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     - name: Clean-up
       uses: rokibhasansagar/slimhub_actions@main
@@ -77,8 +82,8 @@ jobs:
         BUILD_TARGET:  ${{ inputs.BUILD_TARGET }}
   
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v6
-      if: inputs.upload_releases == false || github.event_name != 'workflow_dispatch'
+      uses: actions/upload-artifact@v4
+      if: inputs.UPLOAD_ARTIFACTS == true
       with:
         name: PBRP-Recovery-${{ env.DEVICE_NAME }}-${{ env.BUILD_DATE }}
         path: |
