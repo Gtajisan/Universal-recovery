@@ -62,7 +62,7 @@ on:
 jobs:
   build:
     name: Build TWRP by ${{ github.actor }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -70,7 +70,7 @@ jobs:
       contents: write
     steps:
     - name: Check Out
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
       
     - name: Cleanup
       uses: rokibhasansagar/slimhub_actions@main
@@ -128,10 +128,17 @@ jobs:
         git clone ${{ inputs.DEVICE_TREE }} -b ${{ inputs.DEVICE_TREE_BRANCH }} ./${{ inputs.DEVICE_PATH }}
         echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
-    - name: Installing python2 for legacy builds
+    - name: Setup Python 2.7 for legacy builds
+      if: env.CHECK_LEGACY_BRANCH == 'true'
+      uses: actions/setup-python@v5
+      with:
+        python-version: '2.7'
+
+    - name: Use Python 2.7 as default (legacy)
       if: env.CHECK_LEGACY_BRANCH == 'true'
       run: |
-        sudo apt-get install python2 python-is-python2
+        sudo ln -sf "$(which python)" /usr/bin/python
+        sudo ln -sf "$(which python)" /usr/bin/python2
 
     - name: Building Image 
       run: |

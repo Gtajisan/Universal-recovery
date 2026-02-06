@@ -10,11 +10,38 @@ If there are any issues relating the build tree info (not the workflow file conf
 ## How to Use
 1. Fork this repository.
 
-2. Go to `Action` tab > `All workflows` > Pick which Build you need (`TWRP or PBRP or OFRP or SHRP`) > `Run workflow`, then pick required information from each drop-down list:
- - Manifest Branch (*12.1, *11.0, *10.0, *9.0, *8.1, *7.1, *6.0, 4.4 only for twrp, etc.)
- - Device Tree (Your device tree repository link)
- - Device Tree Branch (Your device tree repository branch)
- - Build Target (boot, recovery, vendorboot)
+2. Ensure GitHub Actions are enabled on your fork (Repository Settings > Actions > General > Allow all actions).
+
+3. Create or locate your device tree repository and branch (for example: `https://github.com/you/android_device_vendor_device` with branch `android-11`).
+
+4. Open the `Actions` tab on your fork and select the workflow that matches your target recovery:
+   - **TeamWin [TWRP]** for modern TWRP builds.
+   - **TWRP (android 4.4+)** only if you are targeting KitKat-era sources.
+   - **PitchBlack [PBRP]** for PitchBlack Recovery.
+   - **OrangeFox [OFRP]** for OrangeFox Recovery.
+   - **SkyHawk [SHRP]** for SkyHawk Recovery.
+
+5. Click **Run workflow** and fill in the inputs:
+   - **Manifest Branch**: pick the Android branch (12.1, 11, 10, 9, 8.1, 7.1, 6.0, or 4.4 for legacy TWRP).
+   - **Device Tree**: the full HTTPS URL for your device tree repo.
+   - **Device Tree Branch**: the branch name that matches your manifest branch.
+   - **Build Target**: `boot`, `recovery`, or `vendorboot` based on your device.
+
+6. Wait for the job to finish, then download artifacts from the workflow run summary or check GitHub Releases if the workflow uploads there.
+
+## Setup Checklist
+- **Make sure your device tree matches the manifest branch.** A mismatch is the most common reason for sync or build errors.
+- **Verify your device tree path layout.** The workflows expect a standard Android device tree layout under `device/<vendor>/<device>`.
+- **Confirm the build target.** Modern devices may require `vendorboot` instead of `boot` or `recovery`.
+- **For legacy TWRP (4.4)**: use the dedicated workflow and ensure your device tree is compatible with older build systems.
+
+## Inputs Reference
+| Input | Description | Example |
+| --- | --- | --- |
+| Manifest Branch | Android manifest branch to sync. | `12.1` |
+| Device Tree | HTTPS URL for the device tree repository. | `https://github.com/you/android_device_vendor_device` |
+| Device Tree Branch | Branch name in your device tree repo. | `android-12.1` |
+| Build Target | Image to build. | `recovery` |
 
 
 ## About LDCHECK
@@ -29,6 +56,7 @@ If there are any issues relating the build tree info (not the workflow file conf
 
 - If you created your account on GitHub.com after July 18, 2017, your noreply email address for GitHub is an ID number and your username in the form of ID+USERNAME@users.noreply.github.com. If you created your account on GitHub.com prior to July 18, 2017, and enabled `Keep my email address private` prior to that date, your noreply email address from GitHub is USERNAME@users.noreply.github.com. You can get an ID-based noreply email address for GitHub by selecting (or deselecting and reselecting) Keep my email address private in your email settings.
 - Advanced users (check [this workflow](https://github.com/mlm-games/ofox_m31s/blob/main/.github/workflows/recovery-build.yml) for tests in the repo)
+- If a workflow is stuck on "Waiting for a runner to pick up this job", make sure your fork is using a supported runner label (this repo defaults to `ubuntu-latest`) and that GitHub Actions are enabled for the repository.
 
 ### Old notes ( Not relevant anymore )
 
