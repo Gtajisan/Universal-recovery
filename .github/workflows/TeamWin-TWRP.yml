@@ -130,7 +130,7 @@ jobs:
 
     - name: Setup Python 2.7 for legacy builds
       if: env.CHECK_LEGACY_BRANCH == 'true'
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '2.7'
 
